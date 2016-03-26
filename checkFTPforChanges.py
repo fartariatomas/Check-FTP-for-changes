@@ -35,30 +35,30 @@ def getNewEmails():
             newListEmails.append(customer.split(" "))
     return newListEmails 
 
-def connectGmail(newListEmails):
-    fromAddress = 'petiscosprobandulho@gmail.com'
+def sendWelcomeEmailToNewEmails(newListEmails):
+    FROM = 'petiscosprobandulho@gmail.com'
     # Credentials (if needed)
-    username = 'petiscosprobandulho'
-    password = 'ZePovinho'
+    username = FROM
+    password = 'zepovinho'
 
     # The actual mail send
-    server = smtplib.SMTP('smtp.gmail.com:587')
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
     server.starttls()
-    server.login(username,password)
+    server.ehlo()
+    server.login(username, password)
     for customer in newListEmails:
-        toAddress = customer[2]
-        msg = "Olá {0} {1}. I did it. I am the boss of python, ftp, gmail and whatever we might need :-p".format(customer[0],customer[1],customer[2])
-        server.sendmail(fromaddr, toaddrs, msg)
+        TO = customer[2]
+        SUBJECT = 'Automated email from my python script!' 
+        TEXT = 'I am the boss of this shit'
+        MSG = """\From: {0}\nTo: {1}\nSubject: {2}\n\n{3}
+        """.format(FROM, ", ".join(TO), SUBJECT, TEXT)
+        server.sendmail(FROM, TO, MSG)
     #closes server
     server.quit()
 
-def sendWelcomeEmailToNewEmails(newListEmails):
-    connectGmail()
-    for customer in newListEmails:
-        print()
-
 def main():
-    #downloadEmailsFTP()
+    downloadEmailsFTP()
     newListEmails = getNewEmails()
     sendWelcomeEmailToNewEmails(newListEmails)
 
